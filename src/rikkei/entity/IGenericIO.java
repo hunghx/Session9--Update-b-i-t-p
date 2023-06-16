@@ -1,4 +1,4 @@
-package rikkei;
+package rikkei.entity;
 
 import java.util.Scanner;
 

@@ -1,11 +1,13 @@
-import rikkei.Category;
-import ra.GenericIO;
-import rikkei.Product;
+import rikkei.entity.Category;
+import rikkei.entity.Product;
+import rikkei.service.ICategory;
+import rikkei.service.impl.CategorySevice;
 
 import java.util.Scanner;
 
 public class Main {
-    private static Category[] listCategories = new Category[5];
+//    private static Category[] listCategories = new Category[5];
+    private static ICategory categoryService = new CategorySevice();
     private static Product[] listProducts = new Product[2];
     private static Scanner scanner = new Scanner(System.in);
 
@@ -97,35 +99,40 @@ public class Main {
     //hiển thị danh sách danh mục
     public static void displayCategories() {
         // kiểm tra danh sách có trống hay không
-        if(checkSizeCategory()==0){
+//        if(checkSizeCategory()==0){
+//            System.err.println("Danh sách trống vui lòng thêm mới");
+//            return;
+//        }
+        if(categoryService.getAll().size()==0){
             System.err.println("Danh sách trống vui lòng thêm mới");
             return;
         }
 //        trong 1 đối tượng category có phương thức dispayData()
-        for (Category cat : listCategories) {
-            if (cat != null) { //  check  khác null thì mới truy cập được displayData
+        for (Category cat : categoryService.getAll()) {
+//            if (cat != null) { //  check  khác null thì mới truy cập được displayData
                 cat.displayData();
-            }
+//            }
         }
     }
 
     // Thêm mới
     public static void createNewCategory() {
         // kiểm tra danh sách đã đầy hay chưa
-        if (checkSizeCategory()==listCategories.length) {
-            System.err.println("Danh sách danh mục đầy, không thể tạo mới nữa");
-            return;
-        }
+//        if (checkSizeCategory()==listCategories.length) {
+//            System.err.println("Danh sách danh mục đầy, không thể tạo mới nữa");
+//            return;
+//        }
         Category catNew = new Category();
         // nhập vào các thuộc tính của đổi tượng vừa tạo
         catNew.inputData(scanner);
         // thêm mới đối tượng vào danh sách
-        for (int i = 0; i < listCategories.length; i++) {
-            if (listCategories[i] == null) {
-                listCategories[i] = catNew;
-                break;
-            }
-        }
+//        for (int i = 0; i < listCategories.length; i++) {
+//            if (listCategories[i] == null) {
+//                listCategories[i] = catNew;
+//                break;
+//            }
+//        }
+        categoryService.save(catNew);
         System.out.println("Thêm mới thành công");
     }
     // Sửa danh mục
@@ -133,48 +140,61 @@ public class Main {
         // nhập vào id của danh mục cần sửa
         System.out.println("Nhập vào id muốn sửa");
         int idEdit = scanner.nextInt();
-        // nuốt dòng
         scanner.nextLine();
-        for (int i = 0; i < listCategories.length; i++) {
-            if (listCategories[i]!=null){
-                if(listCategories[i].getId()==idEdit){
-                    // cho phép sửa
-                    System.out.println("Nhập tên mới");
-                    listCategories[i].setName(scanner.nextLine());
-                    System.out.println("cập nhật thành công");
-                    return;
-                }
-            }
+        // kiểm tra tồn tại
+        Category cat = categoryService.findById(idEdit);
+        if(cat!=null){
+//            có tồn tại id
+            System.out.println("Nhập tên mới");
+            cat.setName(scanner.nextLine());
+            categoryService.save(cat);
+        }else {
+            System.err.println("không tồn tại id");
         }
-        System.err.println("không tìm thấy danh mục, vui lòng thử lại");
+
+        // nuốt dòng
+
+//        for (int i = 0; i < listCategories.length; i++) {
+//            if (listCategories[i]!=null){
+//                if(listCategories[i].getId()==idEdit){
+//                    // cho phép sửa
+//                    System.out.println("Nhập tên mới");
+//                    listCategories[i].setName(scanner.nextLine());
+//                    System.out.println("cập nhật thành công");
+//                    return;
+//                }
+//            }
+//        }
+//        System.err.println("không tìm thấy danh mục, vui lòng thử lại");
     }
     public  static void deleteCategory(){
         // nhập vào id của danh mục cần sửa
         System.out.println("Nhập vào id muốn xóa");
         int idDel = scanner.nextInt();
+        categoryService.delete(idDel);
         // nuốt dòng
-        scanner.nextLine();
-        for (int i = 0; i < listCategories.length; i++) {
-            if (listCategories[i]!=null){
-                if(listCategories[i].getId()==idDel){
-                    // cho phép xóa
-                    listCategories[i]= null;
-                    System.out.println("Xóa thành công");
-                    return;
-                }
-            }
-        }
-        System.err.println("không tìm thấy danh mục, vui lòng thử lại");
+//        scanner.nextLine();
+//        for (int i = 0; i < listCategories.length; i++) {
+//            if (listCategories[i]!=null){
+//                if(listCategories[i].getId()==idDel){
+//                    // cho phép xóa
+//                    listCategories[i]= null;
+//                    System.out.println("Xóa thành công");
+//                    return;
+//                }
+//            }
+//        }
+//        System.err.println("không tìm thấy danh mục, vui lòng thử lại");
     }
-    public static int checkSizeCategory(){
-        int size = 0;
-        for (Category cat : listCategories) {
-            if (cat != null) { //  check  khác null thì mới tăng giá trị đếm lên
-                size++;
-            }
-        }
-       return size;
-    }
+//    public static int checkSizeCategory(){
+//        int size = 0;
+//        for (Category cat : listCategories) {
+//            if (cat != null) { //  check  khác null thì mới tăng giá trị đếm lên
+//                size++;
+//            }
+//        }
+//       return size;
+//    }
 
 //    public static boolean checkFullSizeCategory() {
 //        int dem = 0;
@@ -259,7 +279,7 @@ public class Main {
     // thêm mới
     public static void createNewProduct() {
         // kiẻm tra xem có danh mục chưa
-        if (checkSizeCategory()==0) {
+        if (categoryService.getAll().size()==0) {
             System.err.println("Danh sách danh mục trống, không thể tạo sản phẩm");
             return;
         }
@@ -270,7 +290,7 @@ public class Main {
         }
         Product proNew = new Product();
         // nhập vào các thuộc tính của đổi tượng vừa tạo
-        proNew.inputData(scanner,listCategories);
+        proNew.inputData(scanner,categoryService.getAll());
         // thêm mới đối tượng vào danh sách
         for (int i = 0; i < listProducts.length; i++) {
             if (listProducts[i] == null) {
@@ -312,7 +332,7 @@ public class Main {
                     while(true){
                         System.out.println("Nhập id của danh mục mới cho sản phẩm");
                         int catId = scanner.nextInt();
-                        for (Category cat: listCategories) {
+                        for (Category cat: categoryService.getAll()) {
                             if (cat != null && cat.getId() == catId) {
                                 listProducts[i].setCategory(cat);
                                 break;

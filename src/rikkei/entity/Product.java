@@ -1,9 +1,10 @@
-package rikkei;
+package rikkei.entity;
 
 
+import java.util.List;
 import java.util.Scanner;
 
-public class Product implements IProduct{
+public class Product implements IGenericIO {
     private int id;
     private String name;
     private double price;
@@ -65,7 +66,7 @@ public class Product implements IProduct{
     public void inputData(Scanner sc) {
 
     }
-    public void inputData(Scanner sc, Category[] list){
+    public void inputData(Scanner sc, List<Category> list){
         System.out.println("Nhập id : ");
         this.setId(sc.nextInt()); // Nhập từ số
         System.out.println("Nhập tên sản phẩm");

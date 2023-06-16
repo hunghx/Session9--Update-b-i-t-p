@@ -1,8 +1,9 @@
-package rikkei;
+package rikkei.entity;
 
 import java.util.Scanner;
 
-public class Category implements ICategory{
+public class Category implements IGenericIO {
+
     private int id;
     private String name;
 
@@ -45,4 +46,5 @@ public class Category implements ICategory{
     public void displayData() {
         System.out.println("ID : "+this.getId()+ " | Name : "+ this.getName());
     }
+
 }
